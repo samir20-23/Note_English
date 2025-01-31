@@ -271,7 +271,7 @@
 
     <!-- Floating Action Button -->
     <!-- Floating Action Button -->
-    <button onclick="renderWordsTable()"
+    <button onclick="newWord()"
         class="floating-action-button bg-indigo-500 hover:bg-indigo-500 text-white rounded-full p-0 shadow-lg"
         id="btnAddNewData">
         <i class="fa-solid fa-paper-plane"></i> <!-- Icon for the first button -->
@@ -895,6 +895,7 @@
                 });
         }
 
+        function newWord(){
         // Add event listener to trigger translation when the user types in the word input
         document.getElementById('word').addEventListener('input', autoTranslate);
         // Add New Words
@@ -956,14 +957,14 @@
         ];
 
         // Add all the new words to the words array
-        //newWords.forEach(word => words.push(word));
+        newWords.forEach(word => words.push(word));
 
         // Re-render the words table to include the new words
 
 
         // Show a notification
         showNotification('New words added successfully!');
-
+    };
     </script>
 
 </body>
