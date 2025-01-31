@@ -69,6 +69,37 @@
         .floating-action-button:hover {
             transform: scale(1.1);
         }
+
+
+        #btnAddNewData {
+            z-index: 2;
+            position: fixed;
+            left: 97%;
+            bottom: 8px;
+            transform: translateX(-50%);
+            max-width: 38px;
+            min-width: 27px;
+            animation: btnAddNewData 1s infinite alternate;
+        }
+
+        @keyframes btnAddNewData {
+            0% {
+                left: 97%;
+                bottom: 8px;
+
+            }
+
+            50% {
+                left: 97.01%;
+                bottom: 5px;
+            }
+
+            100% {
+                left: 96.99%;
+                bottom: 9px;
+
+            }
+        }
     </style>
 </head>
 
@@ -234,6 +265,18 @@
     </div>
 
     <!-- Floating Action Button -->
+    <!-- Floating Action Button -->
+    <button onclick="renderWordsTable()"
+        class="floating-action-button bg-indigo-500 hover:bg-indigo-500 text-white rounded-full p-0 shadow-lg"
+        id="btnAddNewData">
+        <i class="fa-solid fa-paper-plane"></i> <!-- Icon for the first button -->
+    </button>
+
+
+
+
+    <hr>
+    <br>
     <button onclick="showAddModal()"
         class="floating-action-button bg-indigo-600 hover:bg-indigo-700 text-white rounded-full p-4 shadow-lg">
         <i class="fas fa-plus text-xl"></i>
@@ -849,6 +892,72 @@
 
         // Add event listener to trigger translation when the user types in the word input
         document.getElementById('word').addEventListener('input', autoTranslate);
+        // Add New Words
+        const newWords = [
+            { word: "analyze", translation: "تحليل", category: "general", language: "english<->arabic", example: "We need to analyze the data before making decisions." },
+            { word: "sequence", translation: "تسلسل", category: "general", language: "english<->arabic", example: "The sequence of events led to a surprising conclusion." },
+            { word: "module", translation: "وحدة", category: "general", language: "english<->arabic", example: "The module needs to be updated for compatibility." },
+            { word: "version", translation: "إصدار", category: "general", language: "english<->arabic", example: "Please ensure you're using the latest version of the software." },
+            { word: "systematic", translation: "منهجي", category: "general", language: "english<->arabic", example: "A systematic approach is essential for achieving the goal." },
+            { word: "compile", translation: "جمع", category: "general", language: "english<->arabic", example: "You need to compile the data before creating the report." },
+            { word: "constant", translation: "ثابت", category: "general", language: "english<->arabic", example: "He is a constant presence in the office." },
+            { word: "optimize", translation: "تحسين", category: "general", language: "english<->arabic", example: "We need to optimize the algorithm for better performance." },
+            { word: "protocol", translation: "بروتوكول", category: "general", language: "english<->arabic", example: "The protocol for data exchange is well-defined." },
+            { word: "streamline", translation: "تبسيط", category: "general", language: "english<->arabic", example: "We need to streamline the process to improve efficiency." },
+            { word: "evaluate", translation: "تقييم", category: "general", language: "english<->arabic", example: "We will evaluate the project's progress next week." },
+            { word: "interface", translation: "واجهة", category: "general", language: "english<->arabic", example: "The user interface is simple and easy to navigate." },
+            { word: "subsequent", translation: "لاحق", category: "general", language: "english<->arabic", example: "The subsequent steps will involve testing the system." },
+            { word: "entity", translation: "كيان", category: "general", language: "english<->arabic", example: "Each entity in the database represents a record." },
+            { word: "feedback", translation: "تعليقات", category: "general", language: "english<->arabic", example: "We value customer feedback to improve our service." },
+            { word: "simulate", translation: "محاكاة", category: "general", language: "english<->arabic", example: "The software can simulate different scenarios for testing." },
+            { word: "evaluate", translation: "تقييم", category: "general", language: "english<->arabic", example: "We need to evaluate the effectiveness of the solution." },
+            { word: "implement", translation: "تنفيذ", category: "general", language: "english<->arabic", example: "We are going to implement the changes starting next week." },
+            { word: "anomaly", translation: "شذوذ", category: "general", language: "english<->arabic", example: "The data anomaly was detected during the analysis." },
+            { word: "exclude", translation: "استبعاد", category: "general", language: "english<->arabic", example: "We need to exclude irrelevant information from the report." },
+            { word: "interact", translation: "تفاعل", category: "general", language: "english<->arabic", example: "The software allows users to interact with the interface." },
+            { word: "parentheses", translation: "قوسين", category: "general", language: "english<->arabic", example: "Use parentheses to group numbers in math expressions." },
+            { word: "facing", translation: "مواجهة", category: "general", language: "english<->arabic", example: "She is facing a challenge." },
+            { word: "angle", translation: "زاوية", category: "general", language: "english<->arabic", example: "The angle between two lines is 90 degrees." },
+            { word: "enumeration", translation: "عد", category: "general", language: "english<->arabic", example: "The enumeration of the items will begin shortly." },
+            { word: "Staged", translation: "مسرحي", category: "general", language: "english<->arabic", example: "The play was staged in a grand theater." },
+            { word: "received", translation: "استلم", category: "general", language: "english<->arabic", example: "I have received the message." },
+            { word: "related", translation: "مرتبط", category: "general", language: "english<->arabic", example: "This information is related to the subject." },
+            { word: "assistance", translation: "مساعدة", category: "general", language: "english<->arabic", example: "He needed assistance with his work." },
+            { word: "configure", translation: "تهيئة", category: "general", language: "english<->arabic", example: "You need to configure the settings before starting." },
+            { word: "resolving", translation: "حل", category: "general", language: "english<->arabic", example: "They are resolving the issue now." },
+            { word: "protect", translation: "حماية", category: "general", language: "english<->arabic", example: "You should protect your personal data online." },
+            { word: "Difficulty", translation: "صعوبة", category: "general", language: "english<->arabic", example: "She faced difficulty in solving the problem." },
+            { word: "determine", translation: "تحديد", category: "general", language: "english<->arabic", example: "We need to determine the cause of the problem." },
+            { word: "compiler", translation: "مترجم", category: "general", language: "english<->arabic", example: "The compiler converts code into machine language." },
+            { word: "Configuration", translation: "تكوين", category: "general", language: "english<->arabic", example: "The configuration of the system was completed." },
+            { word: "companion", translation: "رفيق", category: "general", language: "english<->arabic", example: "He is my constant companion during travels." },
+            { word: "implemented", translation: "تم تنفيذه", category: "general", language: "english<->arabic", example: "The changes were implemented successfully." },
+            { word: "marked", translation: "معلّم", category: "general", language: "english<->arabic", example: "The marked sections are the most important." },
+            { word: "predict", translation: "توقع", category: "general", language: "english<->arabic", example: "I can predict the outcome based on past experiences." },
+            { word: "existing", translation: "موجود", category: "general", language: "english<->arabic", example: "The existing policies will remain unchanged." },
+            { word: "property", translation: "ملكية", category: "general", language: "english<->arabic", example: "This house is private property." },
+            { word: "Progress", translation: "تقدم", category: "general", language: "english<->arabic", example: "The project is making great progress." },
+            { word: "predict", translation: "توقع", category: "general", language: "english<->arabic", example: "We can predict the weather using technology." },
+            { word: "existing", translation: "موجود", category: "general", language: "english<->arabic", example: "The system uses existing data to function." },
+            { word: "knowledge", translation: "معرفة", category: "general", language: "english<->arabic", example: "Knowledge is power." },
+            { word: "Conditional", translation: "شرطي", category: "general", language: "english<->arabic", example: "This statement is conditional, it depends on the input." },
+            { word: "trigger", translation: "محرّك", category: "general", language: "english<->arabic", example: "The action will trigger the next step." },
+            { word: "launching", translation: "إطلاق", category: "general", language: "english<->arabic", example: "The company is launching a new product." },
+            { word: "Explicit", translation: "صريح", category: "general", language: "english<->arabic", example: "The instructions were explicit and clear." },
+            { word: "common", translation: "مشترك", category: "general", language: "english<->arabic", example: "These issues are common across the industry." },
+            { word: "Purpose", translation: "غرض", category: "general", language: "english<->arabic", example: "The purpose of the meeting was to discuss the proposal." },
+            { word: "diagnose", translation: "تشخيص", category: "general", language: "english<->arabic", example: "The doctor will diagnose the illness after a test." },
+            { word: "Exceptions", translation: "استثناءات", category: "general", language: "english<->arabic", example: "There are exceptions to this rule." }
+        ];
+
+        // Add all the new words to the words array
+        newWords.forEach(word => words.push(word));
+
+        // Re-render the words table to include the new words
+
+
+        // Show a notification
+        showNotification('New words added successfully!');
 
     </script>
 
