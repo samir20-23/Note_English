@@ -16,7 +16,7 @@ Route::prefix('word')->group(function () {
     Route::put('/{id}', [WordController::class, 'update'])->name('word.update');
     Route::delete('/{id}', [WordController::class, 'destroy'])->name('word.destroy');
 });
-
+ 
 // Routes that require user authentication
 Route::middleware('auth')->group(function () {
 

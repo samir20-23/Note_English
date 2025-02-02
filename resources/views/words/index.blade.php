@@ -10,6 +10,7 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet"> 
 
 </head>
 
@@ -170,12 +171,12 @@
                         @csrf
                         <div class="mb-4">
                             <label class="block text-sm font-medium text-gray-300">Word</label>
-                            <input type="text" name="word" required
+                            <input type="text" name="word" id="word" 
                                 class="mt-1 block w-full bg-gray-700 border border-gray-600 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
                         </div>
                         <div class="mb-4">
                             <label class="block text-sm font-medium text-gray-300">Translation</label>
-                            <input type="text" name="translation" required
+                            <input type="text" name="translation" id="translation" 
                                 class="mt-1 block w-full bg-gray-700 border border-gray-600 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
                         </div>
                         <div class="mb-4">
@@ -213,12 +214,12 @@
                         @method('PUT')
                         <div class="mb-4">
                             <label class="block text-sm font-medium text-gray-300">Word</label>
-                            <input type="text" name="word" id="editWord" required
+                            <input type="text" name="word" id="editWord"
                                 class="mt-1 block w-full bg-gray-700 border border-gray-600 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
                         </div>
                         <div class="mb-4">
                             <label class="block text-sm font-medium text-gray-300">Translation</label>
-                            <input type="text" name="translation" id="editTranslation" required
+                            <input type="text" name="translation" id="editTranslation"
                                 class="mt-1 block w-full bg-gray-700 border border-gray-600 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
                         </div>
                         <div class="mb-4">
@@ -245,12 +246,15 @@
                 </div>
             </div>
         </div>
-
+        <div id="notification_2"
+        class="hidden fixed bottom-4 right-4 bg-green-500 text-white px-6 py-3 rounded-lg shadow-lg animate__animated animate__fadeInUp">
+    </div>
         @if (session('success'))
             <div id="notification"
                 class="fixed bottom-4 right-4 bg-green-500 text-white px-6 py-3 rounded-lg shadow-lg">
                 {{ session('success') }}
             </div>
+            
             <script>
                 setTimeout(() => {
                     document.getElementById('notification').style.display = 'none';
@@ -259,6 +263,8 @@
         @endif
 
         <script>
+            const notification = document.getElementById('notification_2');
+
             function editWord(id) {
                 $.ajax({
                     url: `/word/${id}/edit`,
@@ -283,6 +289,108 @@
                     row.style.display = text.includes(searchValue) ? '' : 'none';
                 });
             });
+
+            document.getElementById('word').addEventListener('input', autoTranslate);
+
+            async function autoTranslate() { 
+                
+                const wordInput = document.getElementById('word');
+                const translationInput = document.getElementById('translation');
+                const languageSelect = document.getElementById('select[name="language"]');
+                const word = wordInput.value.trim();
+
+                if (!word) {
+                    showNotification('Please enter a word to translate', 'war_livl_2');
+                    return;
+                }
+                if (word.value == "") {
+                    showNotification('Please enter a word to translate', 'war_livl_2');
+                    return;
+                }
+
+
+                // Check if word is already added
+                 
+
+                try {
+                    // if (translationInput.value ==""){
+
+                    // }
+                    // Show loading state
+                    translationInput.value = 'Translating...';
+
+                    // Detect the language of the word
+                    const detectedLang = detectLanguage(word);
+                    let sourceLang = 'en'; // Default source language is English
+                    let targetLang = 'ar'; // Default target language is Arabic
+
+                    // Change language pair based on detection
+                    if (detectedLang === 'en') {
+                        sourceLang = 'en';
+                        if (languageSelect.value === 'english<->french') {
+                            targetLang = 'fr'; // English ↔ French
+                        } else if (languageSelect.value === 'english<->spanish') {
+                            targetLang = 'es'; // English ↔ Spanish
+                        }
+                    } else if (detectedLang === 'ar') {
+                        sourceLang = 'ar';
+                        targetLang = 'en'; // Arabic ↔ English by default
+                        if (languageSelect.value === 'arabic<->english') {
+                            targetLang = 'en'; // Arabic ↔ English
+                        }
+                    } else {
+                        sourceLang = 'en';
+                        targetLang = 'fr';
+                    }
+
+                    // Using MyMemory API (Free Translation API)
+                    const url =
+                        `https://api.mymemory.translated.net/get?q=${encodeURIComponent(word)}&langpair=${sourceLang}|${targetLang}`;
+                    const response = await fetch(url);
+                    const data = await response.json();
+
+                    // Check for the "MYMEMORY WARNING"
+                    if (data.responseData && data.responseData.translatedText && data.responseData.translatedText.includes(
+                            'MYMEMORY WARNING')) {
+                        console.warn('Translation limit reached');
+                        translationInput.value = ''; // Empty the input value
+                        return;
+                    }
+
+                    // Handle translation response
+                    if (!data.responseData || !data.responseData.translatedText) {
+                        throw new Error('Translation failed');
+                    }
+
+                    translationInput.value = data.responseData.translatedText;
+                } catch (error) {
+                    console.error('Translation error:', error);
+                    translationInput.value = '';
+                }
+            }
+            // Show Notification
+            function showNotification(message, livl) {
+                notification.textContent = message;
+                notification.classList.remove('hidden');
+
+                if (livl == 'war_livl_1') {
+                    notification.style.backgroundColor = "#fd7d53";
+                    setTimeout(() => {
+                        notification.classList.add('hidden');
+                    }, 4000);
+
+                } else if (livl == 'war_livl_2') {
+                    setTimeout(() => {
+                        notification.classList.add('hidden');
+                    }, 2000);
+                    notification.style.backgroundColor = "#9bd100";
+
+                } else if (livl == '' || livl == undefined || livl == null || livl == 'war_livl_0') {
+                    setTimeout(() => {
+                        notification.classList.add('hidden');
+                    }, 3000);
+                }
+            }
         </script>
 </body>
 
