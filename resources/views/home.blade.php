@@ -26,11 +26,12 @@
 
         }
 
-        #background-video { 
+        #background-video {
             width: 100%;
             height: 100%;
             object-fit: cover;
-            filter: brightness(0.4);/* Adjust the value (0.5 = 50% brightness) */
+            filter: brightness(0.4);
+            /* Adjust the value (0.5 = 50% brightness) */
             /* Ensures the video covers the entire area */
             z-index: -1;
             /* Places the video behind other content */
@@ -62,7 +63,6 @@
             background-color: rgba(31, 41, 55, 0.8);
             /* Semi-transparent background */
         }
-        
     </style>
 </head>
 
@@ -138,15 +138,17 @@
                         src="https://storage.googleapis.com/popshopprod-shop-renderer-assets-q9gk7sc6/themes/assets/74253f59-c16d-4728-9ad6-803da8ffdc5e/assets/hero-video-with-multiple-buttons-1700666646-video-ab4ceb1e95742187fe677bf9070cf092638955e28eec6d5b87a3db7455d9948b.mp4"
                         type="video/mp4">
                 </video>
-                <div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.5);"></div>
+                <div
+                    style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.5);">
+                </div>
             </div>
 
 
             <script>
-                document.addEventListener("DOMContentLoaded", function () {
+                document.addEventListener("DOMContentLoaded", function() {
                     var video = document.getElementById("background-video");
                     if (video) {
-                        video.play().catch(function (error) {
+                        video.play().catch(function(error) {
                             console.log("Autoplay failed:", error);
                         });
                     }
@@ -279,7 +281,7 @@
             }
         });
     </script>
-  <script>
+<script>
         function toggleBookmark(button) {
 
 
@@ -372,7 +374,7 @@
     }
    `;
         document.head.appendChild(style);
-    </script>
+</script>
 
 </body>
 
