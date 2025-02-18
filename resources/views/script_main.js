@@ -1,45 +1,38 @@
 
-// Sample data for words
+
 let words = [
-    // General
     { word: "Hello", translation: "مرحبًا", category: "general", language: "english<->arabic", example: "Hello, how are you?", isFavorite: false, isMastered: false },
     { word: "Thank you", translation: "شكرًا", category: "general", language: "english<->arabic", example: "Thank you for your help.", isFavorite: false, isMastered: false },
     { word: "Goodbye", translation: "وداعًا", category: "general", language: "english<->arabic", example: "Goodbye, see you later.", isFavorite: false, isMastered: false },
     { word: "Please", translation: "من فضلك", category: "general", language: "english<->arabic", example: "Please pass me the salt.", isFavorite: false, isMastered: false },
     { word: "Sorry", translation: "آسف", category: "general", language: "english<->arabic", example: "I am sorry for being late.", isFavorite: false, isMastered: false },
 
-    // Business
     { word: "Profit", translation: "ربح", category: "business", language: "english<->arabic", example: "The company made a high profit this year.", isFavorite: false, isMastered: false },
     { word: "Meeting", translation: "اجتماع", category: "business", language: "english<->arabic", example: "We have a meeting at 10 AM.", isFavorite: false, isMastered: false },
     { word: "Contract", translation: "عقد", category: "business", language: "english<->arabic", example: "The contract is valid for two years.", isFavorite: false, isMastered: false },
 
-    // Technology
     { word: "Internet", translation: "الإنترنت", category: "technology", language: "english<->arabic", example: "The internet connects people worldwide.", isFavorite: false, isMastered: false },
     { word: "Software", translation: "البرمجيات", category: "technology", language: "english<->arabic", example: "This software helps manage accounts.", isFavorite: false, isMastered: false },
     { word: "Hardware", translation: "الأجهزة", category: "technology", language: "english<->arabic", example: "The computer hardware includes the processor and memory.", isFavorite: false, isMastered: false },
 
-    // Science
     { word: "Gravity", translation: "الجاذبية", category: "science", language: "english<->arabic", example: "Gravity keeps us on the ground.", isFavorite: false, isMastered: false },
     { word: "Atom", translation: "ذرة", category: "science", language: "english<->arabic", example: "An atom is the smallest unit of matter.", isFavorite: false, isMastered: false },
     { word: "Experiment", translation: "تجربة", category: "science", language: "english<->arabic", example: "The scientist conducted an experiment.", isFavorite: false, isMastered: false },
 
-    // Travel
     { word: "Airport", translation: "مطار", category: "travel", language: "english<->arabic", example: "The flight departs from the airport.", isFavorite: false, isMastered: false },
     { word: "Hotel", translation: "فندق", category: "travel", language: "english<->arabic", example: "We booked a hotel for the night.", isFavorite: false, isMastered: false },
     { word: "Passport", translation: "جواز سفر", category: "travel", language: "english<->arabic", example: "You need a passport to travel abroad.", isFavorite: false, isMastered: false },
 
-    // Health
     { word: "Doctor", translation: "طبيب", category: "health", language: "english<->arabic", example: "The doctor checked my health.", isFavorite: false, isMastered: false },
     { word: "Medicine", translation: "دواء", category: "health", language: "english<->arabic", example: "You need to take your medicine.", isFavorite: false, isMastered: false },
     { word: "Exercise", translation: "تمرين", category: "health", language: "english<->arabic", example: "Exercise is good for the heart.", isFavorite: false, isMastered: false },
 
-    // Emotions
     { word: "Happy", translation: "سعيد", category: "emotions", language: "english<->arabic", example: "I feel happy today.", isFavorite: false, isMastered: false },
     { word: "Angry", translation: "غاضب", category: "emotions", language: "english<->arabic", example: "He was angry about the mistake.", isFavorite: false, isMastered: false },
     { word: "Sad", translation: "حزين", category: "emotions", language: "english<->arabic", example: "She felt sad after the news.", isFavorite: false, isMastered: false }
 ];
 
-// DOM Elements
+
 const mainBody = document.getElementById('mainBody');
 const wordsTableBody = document.getElementById('wordsTableBody');
 const totalWords = document.getElementById('totalWords');
@@ -54,7 +47,7 @@ const flashcardModal = document.getElementById('flashcardModal');
 const dailyChallengeModal = document.getElementById('dailyChallengeModal');
 const notification = document.getElementById('notification');
 
-// Theme Management
+
 function toggleTheme() {
     if (mainBody.classList.contains('dark')) {
         mainBody.classList.remove('dark');
@@ -65,13 +58,13 @@ function toggleTheme() {
     }
 }
 
-// Toggle Import/Export Menu
+
 function toggleImportExportMenu() {
     const menu = document.getElementById('importExportMenu');
     menu.classList.toggle('hidden');
 }
 
-// Export Words
+
 function exportWords() {
     const dataStr = JSON.stringify(words);
     const dataBlob = new Blob([dataStr], { type: 'application/json' });
@@ -84,7 +77,7 @@ function exportWords() {
     showNotification('Words exported successfully!', 'war_livl_0', 'war_livl_0');
 }
 
-// Import Words
+
 function importWords(event) {
     const file = event.target.files[0];
     if (file) {
@@ -99,48 +92,39 @@ function importWords(event) {
     }
 }
 
-// Show Add Word Modal
+
 function showAddModal() {
-    // Reset the form fields
     const addWordForm = document.getElementById('addWordForm');
     addWordForm.reset();
 
-    // Remove any previous animation classes
     addWordModal.classList.remove('animate__fadeIn', 'animate__slideInUp');
 
-    // Show the modal
     addWordModal.classList.remove('hidden');
 
-    // Add animation classes for a smooth appearance
     addWordModal.classList.add('animate__animated', 'animate__fadeIn');
     addWordModal.querySelector('.animate__slideInUp').classList.add('animate__animated', 'animate__slideInUp');
 
-    // Focus on the first input field for better UX
     const firstInput = addWordForm.querySelector('input[name="word"]');
     firstInput.focus();
 
-    // Center the modal on the screen
     centerModal(addWordModal);
 }
 
-// Helper function to center the modal
+
 function centerModal(modal) {
     const modalContent = modal.querySelector('.animate__slideInUp');
     const windowHeight = window.innerHeight;
     const modalHeight = modalContent.offsetHeight;
 
-    // Calculate the top margin to center the modal
     const topMargin = (windowHeight - modalHeight) / 2;
     modalContent.style.marginTop = `${Math.max(topMargin, 20)}px`; // Ensure it's at least 20px from the top
 }
 
-// Hide Add Word Modal
+
 function hideAddModal() {
-    // Add animation classes for a smooth exit
     addWordModal.classList.add('animate__animated', 'animate__fadeOut');
     addWordModal.querySelector('.animate__slideInUp').classList.add('animate__animated', 'animate__slideOutDown');
 
-    // Hide the modal after the animation ends
     setTimeout(() => {
         addWordModal.classList.add('hidden');
         addWordModal.classList.remove('animate__fadeOut');
@@ -148,13 +132,12 @@ function hideAddModal() {
     }, 300); // Match the duration of the animation
 }
 
-// Hide Add Word Modal
+
 function hideAddModal() {
     addWordModal.classList.add('hidden');
 }
 
-// Modified Add New Word with Local Storage
-// Update the addWordForm event listener to include isDone
+
 document.getElementById('addWordForm').addEventListener('submit', function (e) {
     e.preventDefault();
     let wordInput = document.getElementById('word');
@@ -163,14 +146,11 @@ document.getElementById('addWordForm').addEventListener('submit', function (e) {
     const translationValue = translation.value.trim();
 
     if (word && translationValue) {
-        // Check for existing word
         const existingWord = checkExistingWord(word, translationValue);
 
         if (existingWord) {
-            // Show notification with recommendation
             showNotification(`This word "${word}" or its translation already exists!`, 'war_livl_1');
 
-            // Highlight the existing word in the table
             const existingRow = document.querySelector(`tr:contains('${existingWord.word}')`);
             if (existingRow) {
                 existingRow.classList.add('bg-yellow-100');
@@ -179,7 +159,6 @@ document.getElementById('addWordForm').addEventListener('submit', function (e) {
                 }, 3000);
             }
 
-            // Clear the form
             e.target.reset();
             return;
         }
@@ -197,7 +176,6 @@ document.getElementById('addWordForm').addEventListener('submit', function (e) {
             dateAdded: new Date().toISOString()
         };
 
-        // Add new word at the beginning of the array
         words.unshift(newWord);
         saveToLocalStorage();
         renderWordsTable();
@@ -210,15 +188,13 @@ document.getElementById('addWordForm').addEventListener('submit', function (e) {
         showNotification('Please enter a translation for word', 'war_livl_2');
     }
 });
-// Render Words Table
+
 function renderWordsTable() {
     wordsTableBody.innerHTML = '';
 
-    // Sort words: new words (not done) at top, done words at bottom
     const sortedWords = [...words].sort((a, b) => {
         if (a.isDone && !b.isDone) return 1;
         if (!a.isDone && b.isDone) return -1;
-        // For words with same done status, sort by date (newest first)
         return new Date(b.dateAdded) - new Date(a.dateAdded);
     });
 
@@ -257,7 +233,6 @@ function renderWordsTable() {
                 </td>
             `;
 
-        // Add visual indication for done words
         if (word.isDone) {
             row.style.backgroundColor = 'rgba(114, 222, 172, 0.13)';
             row.style.animation = 'wordDoneAnimation 0.1s ease-in-out forwards';
@@ -269,7 +244,7 @@ function renderWordsTable() {
     });
     updateProgress();
 }
-// Modified Toggle Favorite with Local Storage
+
 function toggleFavorite(index) {
     words[index].isFavorite = !words[index].isFavorite;
 
@@ -284,7 +259,7 @@ function toggleFavorite(index) {
     updateStatistics();
     renderFavoriteWords();
 }
-// Modified Delete Word with Local Storage
+
 function deleteWord(index) {
     words.splice(index, 1);
     saveToLocalStorage();
@@ -311,29 +286,26 @@ function toggleDone(index) {
     renderWordsTable();
     updateStatistics();
 }
-// Update Progress
+
 function updateProgress() {
     totalWords.textContent = words.length;
     const doneWords = words.filter(word => word.isDone).length;
     const progressPercentage = Math.round((doneWords / words.length) * 100) || 0;
 
-    // Update existing elements
     masteredWords.textContent = words.filter(word => word.isMastered).length;
 
-    // Add done words count if you have an element for it
     const doneWordsElement = document.getElementById('doneWords');
     if (doneWordsElement) {
         doneWordsElement.textContent = doneWords;
     }
 
-    // Update progress bar if you have one
     const progressBar = document.getElementById('progressBar');
     if (progressBar) {
         progressBar.style.width = `${progressPercentage}%`;
         progressBar.setAttribute('aria-valuenow', progressPercentage);
     }
 }
-// Show Notification
+
 function showNotification(message, livl) {
     notification.textContent = message;
     notification.classList.remove('hidden');
@@ -357,7 +329,7 @@ function showNotification(message, livl) {
     }
 }
 
-// Flashcard Logic
+
 let currentCardIndex = 0;
 let isFlipped = false;
 
@@ -393,7 +365,7 @@ function previousCard() {
     showCard(currentCardIndex);
 }
 
-// Daily Challenge Logic
+
 function showDailyChallenge() {
     dailyChallengeModal.classList.remove('hidden');
     const randomWord = words[Math.floor(Math.random() * words.length)];
@@ -417,7 +389,7 @@ function markLearned() {
     hideDailyChallengeModal();
 }
 
-// Voice Recognition
+
 function startVoiceRecognition() {
     const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
     recognition.lang = 'en-US';
@@ -429,7 +401,7 @@ function startVoiceRecognition() {
     recognition.start();
 }
 
-// Modified filter function to work with local storage
+
 function filterWords() {
     const searchTerm = searchInput.value.toLowerCase();
     const category = categoryFilter.value;
@@ -443,12 +415,10 @@ function filterWords() {
             (language === '' || word.language === language);
     });
 
-    // First sort by done status
     filteredWords.sort((a, b) => {
         if (a.isDone && !b.isDone) return 1;
         if (!a.isDone && b.isDone) return -1;
 
-        // Then apply additional sorting
         switch (sort) {
             case 'newest':
                 return new Date(b.dateAdded) - new Date(a.dateAdded);
@@ -500,38 +470,31 @@ function renderFilteredWords(filteredWords) {
     });
 }
 
-// Event Listeners
+
 searchInput.addEventListener('input', filterWords);
 categoryFilter.addEventListener('change', filterWords);
 languageFilter.addEventListener('change', filterWords);
 sortFilter.addEventListener('change', filterWords);
 
-// Initial Render
+
 renderWordsTable();
 //speack
 
 function speakWord(button) {
-    // Get the input field associated with the button
     const inputField = button.previousElementSibling;
 
-    // Get the word from the input field
     const word = inputField.value.trim();
 
-    // Check if the word is not empty
     if (word === "") {
         alert("Please enter a word to speak.");
         return;
     }
 
-    // Check if the browser supports the Web Speech API
     if ('speechSynthesis' in window) {
-        // Create a new SpeechSynthesisUtterance object
         const utterance = new SpeechSynthesisUtterance(word);
 
-        // Get the language pair selected by the user
         const languagePair = document.querySelector('select[name="language"]').value;
 
-        // Set the language based on the selected language pair
         switch (languagePair) {
             case "english<->arabic":
                 utterance.lang = "ar-SA"; // Arabic (Saudi Arabia)
@@ -547,10 +510,8 @@ function speakWord(button) {
                 break;
         }
 
-        // Get all available voices
         const voices = speechSynthesis.getVoices();
 
-        // Try to find a voice that matches the selected language
         const selectedVoice = voices.find(voice => voice.lang === utterance.lang);
         if (selectedVoice) {
             utterance.voice = selectedVoice; // Use the matching voice
@@ -558,12 +519,10 @@ function speakWord(button) {
             console.warn("No matching voice found for the selected language. Using default voice.");
         }
 
-        // Set the pitch, rate, and volume
         utterance.pitch = 1; // Range: 0 to 2
         utterance.rate = 1; // Speed: 0.1 to 10
         utterance.volume = 1; // Range: 0 to 1
 
-        // Speak the word
         speechSynthesis.speak(utterance);
     } else {
         alert("Your browser does not support the Web Speech API.");
@@ -573,13 +532,10 @@ function speakWord(button) {
 function submitForm(event) {
     event.preventDefault();  // Prevent the default form submission
 
-    // Here, you can handle form submission, e.g., with an AJAX request or by submitting the form data
     const formData = new FormData(document.getElementById('addWordForm'));
 
-    // Log or send the data
     console.log(Object.fromEntries(formData.entries()));
 
-    // Example: Submit via AJAX (use your preferred method)
 
 }
 document.addEventListener("keydown", function (event) {
@@ -590,10 +546,7 @@ document.addEventListener("keydown", function (event) {
         showAddModal();
     }
 });
-// //-YAAe8TKg
-// + + +
-// + + +
-// + + +
+
 document.getElementById('word').addEventListener('input', autoTranslate);
 
 async function autoTranslate() {
@@ -612,25 +565,19 @@ async function autoTranslate() {
     }
 
 
-    // Check if word is already added
     if (isWordAlreadyAdded(word)) {
         showNotification('This word has already been translated', 'war_livl_1');
         return;
     }
 
     try {
-        // if (translationInput.value ==""){
 
-        // }
-        // Show loading state
         translationInput.value = 'Translating...';
 
-        // Detect the language of the word
         const detectedLang = detectLanguage(word);
         let sourceLang = 'en'; // Default source language is English
         let targetLang = 'ar'; // Default target language is Arabic
 
-        // Change language pair based on detection
         if (detectedLang === 'en') {
             sourceLang = 'en';
             if (languageSelect.value === 'english<->french') {
@@ -649,19 +596,16 @@ async function autoTranslate() {
             targetLang = 'fr';
         }
 
-        // Using MyMemory API (Free Translation API)
         const url = `https://api.mymemory.translated.net/get?q=${encodeURIComponent(word)}&langpair=${sourceLang}|${targetLang}`;
         const response = await fetch(url);
         const data = await response.json();
 
-        // Check for the "MYMEMORY WARNING"
         if (data.responseData && data.responseData.translatedText && data.responseData.translatedText.includes('MYMEMORY WARNING')) {
             console.warn('Translation limit reached');
             translationInput.value = ''; // Empty the input value
             return;
         }
 
-        // Handle translation response
         if (!data.responseData || !data.responseData.translatedText) {
             throw new Error('Translation failed');
         }
@@ -674,7 +618,6 @@ async function autoTranslate() {
 }
 
 function isWordAlreadyAdded(word) {
-    // Replace with your logic to check if the word is already translated
     const alreadyTranslatedWords = ['hello', 'world']; // Example array, replace with actual storage/logic
     return alreadyTranslatedWords.includes(word.toLowerCase());
 }
@@ -682,7 +625,6 @@ function isWordAlreadyAdded(word) {
 
 
 function detectLanguage(word) {
-    // Simple check to detect Arabic or English based on characters
     const arabicPattern = /[\u0600-\u06FF]/; // Arabic range in Unicode
     const englishPattern = /^[a-zA-Z\s]*$/; // English letters only (ignores spaces)
 
@@ -695,7 +637,7 @@ function detectLanguage(word) {
     }
 }
 
-// Store predefined word sets
+
 const wordSets = {
     general: [
         { word: "analyze", translation: "تحليل", category: "general", language: "english<->arabic", example: "We need to analyze the data before making decisions." },
@@ -711,17 +653,15 @@ const wordSets = {
         { word: "database", translation: "قاعدة بيانات", category: "technology", language: "english<->arabic", example: "The database stores customer information." }
     ]
 };
-// Keep track of which sets have been added
+
 let addedSets = new Set();
 function newWord() {
-    // Show loading state on the button
     const button = document.getElementById('btnAddNewData');
     const originalContent = button.innerHTML;
     button.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
     button.disabled = true;
 
     try {
-        // Get all available sets that haven't been fully added yet
         const availableSets = Object.keys(wordSets).filter(set => {
             const remainingWords = wordSets[set].filter(word =>
                 !words.some(w => w.word === word.word)
@@ -734,10 +674,8 @@ function newWord() {
             return;
         }
 
-        // Pick a random set from available sets
         const randomSet = availableSets[Math.floor(Math.random() * availableSets.length)];
 
-        // Filter out words already in the table
         let newWords = wordSets[randomSet].filter(word =>
             !words.some(w => w.word === word.word)
         );
@@ -747,7 +685,6 @@ function newWord() {
             return;
         }
 
-        // Select a random subset of words (e.g., 2-3 words at a time)
         const randomWords = [];
         const count = Math.min(3, newWords.length); // Adjust number of words to add
         for (let i = 0; i < count; i++) {
@@ -755,7 +692,6 @@ function newWord() {
             randomWords.push(newWords.splice(randomIndex, 1)[0]);
         }
 
-        // Add timestamp and initialize properties for each word
         const wordsToAdd = randomWords.map(word => ({
             ...word,
             dateAdded: new Date().toISOString(),
@@ -764,26 +700,20 @@ function newWord() {
             id: generateUniqueId() // Add unique ID for each word
         }));
 
-        // Add words to the main array
         words.push(...wordsToAdd);
 
-        // Save to local storage
         saveToLocalStorage();
 
-        // Re-render the words table
         renderWordsTable();
 
-        // Show success notification
         showNotification(`Added ${wordsToAdd.length} new ${randomSet} words successfully!`);
 
-        // Add animation to new words
         animateNewWords(wordsToAdd);
 
     } catch (error) {
         console.error('Error adding new words:', error);
         showNotification('Error adding new words. Please try again.', 'war_livl_2');
     } finally {
-        // Restore button state
         setTimeout(() => {
             button.innerHTML = originalContent;
             button.disabled = false;
@@ -791,7 +721,7 @@ function newWord() {
     }
 }
 
-// Local Storage Management  testestes 
+
 function saveToLocalStorage() {
     localStorage.setItem('vocabularyWords', JSON.stringify(words));
 }
@@ -803,44 +733,34 @@ function loadFromLocalStorage() {
         renderWordsTable();
     }
 }
-// Initialize the app
+
 document.addEventListener('DOMContentLoaded', function () {
-    // Load word data from local storage
     loadFromLocalStorage();
 
-    // Initialize added sets from local storage
     const savedSets = localStorage.getItem('addedWordSets');
     if (savedSets) {
         addedSets = new Set(JSON.parse(savedSets));
     }
 
-    // Add event listeners for filters
     searchInput.addEventListener('input', filterWords);
     categoryFilter.addEventListener('change', filterWords);
     languageFilter.addEventListener('change', filterWords);
     sortFilter.addEventListener('change', filterWords);
 
-    // Add auto-translate event listener
-    // const wordInput = document.getElementById('word');
-    // if (wordInput) {
-    //     wordInput.addEventListener('blur', autoTranslate);
-    // } 
     updateStatistics();
     renderFavoriteWords();
 
-    // Update charts if they exist
     const chartData = generateChartData();
-    // Your chart update logic here
 });
-// Initialize everything
 
 
-// Generate unique ID for each word
+
+
 function generateUniqueId() {
     return Date.now().toString(36) + Math.random().toString(36).substr(2);
 }
 
-// Animate new words in the table
+
 function animateNewWords(newWords) {
     const rows = document.querySelectorAll('#wordsTableBody tr');
     rows.forEach(row => {
@@ -854,7 +774,7 @@ function animateNewWords(newWords) {
     });
 }
 
-// Helper function to check if word already exists
+
 function checkExistingWord(word, translation) {
     return words.find(w =>
         w.word.toLowerCase() === word.toLowerCase() ||
@@ -862,16 +782,16 @@ function checkExistingWord(word, translation) {
     );
 }
 
-// Modified renderWordsTable to sort new/done words
 
 
-// Modified addWordForm event listener with duplicate checking
 
 
-// Modified filterWords function to maintain sorting
 
 
-// Helper function to extend jQuery-like contains selector
+
+
+
+
 document.querySelector = document.querySelector || function (selector) {
     if (selector.includes(':contains')) {
         const text = selector.match(/'([^']+)'/)[1];
@@ -882,10 +802,9 @@ document.querySelector = document.querySelector || function (selector) {
     return document.querySelector(selector);
 };
 
-// ////xxxxxdxxxxxxdxxxxxxdxxxxxxxxxxdxxxxxdxxxxxxxxdxxxxxdxxxxxxdxddddddddddddddddddddd 
-// Add these functions to your existing JavaScript
 
-// Function to update statistics
+
+
 function updateStatistics() {
     const stats = {
         totalWords: words.length,
@@ -894,14 +813,12 @@ function updateStatistics() {
         learningStreak: calculateLearningStreak()
     };
 
-    // Update stats in localStorage
     localStorage.setItem('vocabularyStats', JSON.stringify(stats));
 
-    // Update UI
     updateStatsDisplay(stats);
 }
 
-// Calculate completed words today
+
 function getCompletedToday() {
     const today = new Date().toDateString();
     return words.filter(word => {
@@ -910,16 +827,14 @@ function getCompletedToday() {
     }).length;
 }
 
-// Calculate learning streak
+
 function calculateLearningStreak() {
     const dates = words
         .filter(word => word.completedDate)
         .map(word => new Date(word.completedDate).toDateString());
 
-    // Get unique dates
     const uniqueDates = [...new Set(dates)].sort();
 
-    // Calculate streak
     let streak = 0;
     let currentDate = new Date();
 
@@ -931,13 +846,13 @@ function calculateLearningStreak() {
     return streak;
 }
 
-// Modified toggleFavorite function
 
 
-// Modified toggleDone function
 
 
-// Render favorite words box
+
+
+
 function renderFavoriteWords() {
     const favoriteWordsContainer = document.getElementById('favoriteWordsContainer');
     if (!favoriteWordsContainer) return;
@@ -958,9 +873,8 @@ function renderFavoriteWords() {
     `).join('');
 }
 
-// Generate chart data
+
 function generateChartData() {
-    // Weekly progress data
     const last7Days = Array.from({ length: 7 }, (_, i) => {
         const date = new Date();
         date.setDate(date.getDate() - i);
@@ -980,7 +894,6 @@ function generateChartData() {
         ).length
     }));
 
-    // Category data
     const categoryData = Object.entries(
         words.reduce((acc, word) => {
             acc[word.category] = (acc[word.category] || 0) + 1;
@@ -993,6 +906,209 @@ function generateChartData() {
 
     return { progressData, categoryData };
 }
-// key for tabe
 
 
+
+
+//game 
+// Function to show the selected game and hide others
+function showGame(gameId) {
+    // Hide all game containers
+    const games = document.querySelectorAll('.game-container');
+    games.forEach(game => game.classList.add('hidden'));
+
+    // Show the selected game
+    document.getElementById(gameId).classList.remove('hidden');
+
+    // Reset inputs and scores
+    if (gameId === 'speedChallenge') {
+        startSpeedChallenge();
+    } else if (gameId === 'wordMatch') {
+        startWordMatch();
+    } else if (gameId === 'memoryGame') {
+        startMemoryGame();
+    }
+}
+
+// Word Match Game Logic
+function startWordMatch() {
+    const wordPairs = [
+        { word: 'Apple', translation: 'Pomme' },
+        { word: 'Cat', translation: 'Chat' },
+        { word: 'Dog', translation: 'Chien' }
+    ];
+
+    const container = document.getElementById('wordMatchContainer');
+    container.innerHTML = '';
+
+    let score = 0;
+    let timeLeft = 60;
+    document.getElementById('wordMatchScore').innerText = score;
+    document.getElementById('wordMatchTimer').innerText = timeLeft;
+
+    // Shuffle and display words and translations
+    const words = [...wordPairs.map(pair => pair.word)];
+    const translations = [...wordPairs.map(pair => pair.translation)];
+    const shuffledWords = words.sort(() => Math.random() - 0.5);
+    const shuffledTranslations = translations.sort(() => Math.random() - 0.5);
+
+    shuffledWords.forEach(word => {
+        const wordDiv = document.createElement('div');
+        wordDiv.className = 'bg-blue-100 p-2 rounded text-center cursor-pointer';
+        wordDiv.innerText = word;
+        wordDiv.onclick = () => checkMatch(word, wordDiv);
+        container.appendChild(wordDiv);
+    });
+
+    shuffledTranslations.forEach(trans => {
+        const transDiv = document.createElement('div');
+        transDiv.className = 'bg-green-100 p-2 rounded text-center cursor-pointer';
+        transDiv.innerText = trans;
+        transDiv.onclick = () => checkMatch(trans, transDiv);
+        container.appendChild(transDiv);
+    });
+
+    let firstSelection = null;
+    function checkMatch(value, element) {
+        if (!firstSelection) {
+            firstSelection = { value, element };
+            element.classList.add('bg-yellow-300');
+        } else {
+            if (
+                wordPairs.find(
+                    pair =>
+                        (pair.word === firstSelection.value && pair.translation === value) ||
+                        (pair.word === value && pair.translation === firstSelection.value)
+                )
+            ) {
+                score++;
+                document.getElementById('wordMatchScore').innerText = score;
+                firstSelection.element.classList.add('bg-green-300');
+                element.classList.add('bg-green-300');
+                firstSelection.element.onclick = null;
+                element.onclick = null;
+            } else {
+                firstSelection.element.classList.remove('bg-yellow-300');
+                element.classList.add('bg-red-300');
+                setTimeout(() => {
+                    element.classList.remove('bg-red-300');
+                }, 500);
+            }
+            firstSelection = null;
+        }
+    }
+
+    const timer = setInterval(() => {
+        timeLeft--;
+        document.getElementById('wordMatchTimer').innerText = timeLeft;
+        if (timeLeft <= 0) {
+            clearInterval(timer);
+            alert('Time is up! Your score: ' + score);
+        }
+    }, 1000);
+}
+
+// Speed Challenge Game Logic
+function startSpeedChallenge() {
+    const words = [
+        { word: 'House', translation: 'Maison' },
+        { word: 'Book', translation: 'Livre' },
+        { word: 'Car', translation: 'Voiture' }
+    ];
+
+    let score = 0;
+    let timeLeft = 30;
+    document.getElementById('speedScore').innerText = score;
+    document.getElementById('speedTimer').innerText = timeLeft;
+
+    const input = document.getElementById('challengeInput');
+    const challengeWord = document.getElementById('challengeWord');
+
+    function newWord() {
+        const randomWord = words[Math.floor(Math.random() * words.length)];
+        challengeWord.innerText = randomWord.word;
+        input.value = '';
+        input.focus();
+
+        input.onkeyup = () => {
+            if (input.value.toLowerCase() === randomWord.translation.toLowerCase()) {
+                score++;
+                document.getElementById('speedScore').innerText = score;
+                newWord();
+            }
+        };
+    }
+
+    newWord();
+
+    const timer = setInterval(() => {
+        timeLeft--;
+        document.getElementById('speedTimer').innerText = timeLeft;
+        if (timeLeft <= 0) {
+            clearInterval(timer);
+            alert('Time is up! Your score: ' + score);
+        }
+    }, 1000);
+}
+
+// Memory Game Logic
+function startMemoryGame() {
+    const cards = [
+        '🐱', '🐱', '🐶', '🐶', '🐰', '🐰', '🦊', '🦊'
+    ];
+
+    let score = 0;
+    let moves = 0;
+    let firstCard = null;
+    const memoryContainer = document.getElementById('memoryContainer');
+    memoryContainer.innerHTML = '';
+
+    // Shuffle and display cards
+    const shuffledCards = cards.sort(() => Math.random() - 0.5);
+    shuffledCards.forEach(symbol => {
+        const card = document.createElement('div');
+        card.className = 'bg-gray-200 p-4 rounded text-center text-3xl cursor-pointer';
+        card.innerText = '?';
+        card.dataset.symbol = symbol;
+        card.onclick = () => flipCard(card);
+        memoryContainer.appendChild(card);
+    });
+
+    function flipCard(card) {
+        if (card.innerText !== '?') return;
+        card.innerText = card.dataset.symbol;
+        card.classList.add('bg-white');
+
+        if (!firstCard) {
+            firstCard = card;
+        } else {
+            moves++;
+            document.getElementById('memoryMoves').innerText = moves;
+            if (firstCard.dataset.symbol === card.dataset.symbol) {
+                score++;
+                document.getElementById('memoryScore').innerText = score;
+                firstCard.onclick = null;
+                card.onclick = null;
+            } else {
+                setTimeout(() => {
+                    firstCard.innerText = '?';
+                    firstCard.classList.remove('bg-white');
+                    card.innerText = '?';
+                    card.classList.remove('bg-white');
+                }, 800);
+            }
+            firstCard = null;
+        }
+    }
+}
+
+// Daily Challenge Logic (Placeholder)
+function startDailyChallenge() {
+    document.getElementById('dailyChallengeList').innerHTML = `
+        <ul>
+            <li>Complete 5 translations</li>
+            <li>Score 10 points in Speed Challenge</li>
+            <li>Find 4 pairs in Memory Game</li>
+        </ul>
+    `;
+}
