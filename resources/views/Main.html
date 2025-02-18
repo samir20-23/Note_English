@@ -6,7 +6,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Enhanced Translation Dictionary</title>
 
-    <!-- Add PNG image as favicon -->
     <link rel="icon" href="https://cdn-icons-png.flaticon.com/512/3898/3898082.png" type="image/png">
 
     <script src="https://cdn.tailwindcss.com"></script>
@@ -21,7 +20,6 @@
 </head>
 
 <body class="bg-gray-900 text-gray-100 font-[Inter] theme-transition" id="mainBody">
-    <!-- Navigation -->
     <nav class="bg-gray-800 border-b border-gray-700 theme-transition">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between h-16">
@@ -41,9 +39,9 @@
                             <i class="fas fa-star mr-2"></i>Favorites
                         </a>
                         <a href="#" onclick=" showDoneList()"
-                        class="border-transparent text-gray-300 hover:text-white inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">
-                        <i class="fas fa-star mr-2"></i>Done Word
-                    </a>
+                            class="border-transparent text-gray-300 hover:text-white inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">
+                            <i class="fas fa-star mr-2"></i>Done Word
+                        </a>
                         <a href="#" onclick="showFlashcards()"
                             class="border-transparent text-gray-300 hover:text-white inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">
                             <i class="fas fa-cards mr-2"></i>Flashcards
@@ -52,12 +50,10 @@
                 </div>
 
                 <div class="flex items-center space-x-4">
-                    <!-- Theme Toggle -->
                     <button onclick="toggleTheme()" class="p-2 rounded-full hover:bg-gray-700">
                         <i class="fas fa-moon text-gray-300 hover:text-white"></i>
                     </button>
 
-                    <!-- Import/Export -->
                     <div class="relative">
                         <button onclick="toggleImportExportMenu()" class="p-2 rounded-full hover:bg-gray-700">
                             <i class="fas fa-file-import text-gray-300 hover:text-white"></i>
@@ -77,7 +73,6 @@
                         </div>
                     </div>
 
-                    <!-- Daily Challenge -->
                     <button onclick="showDailyChallenge()" class="p-2 rounded-full hover:bg-gray-700">
                         <i class="fas fa-trophy text-gray-300 hover:text-white"></i>
                     </button>
@@ -86,10 +81,8 @@
         </div>
     </nav>
 
-    <!-- Main Content -->
     <div class="py-10">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <!-- Filters -->
             <div class="mb-6 grid grid-cols-1 md:grid-cols-3 gap-4">
                 <div>
                     <label class="block text-sm font-medium text-gray-400 mb-2">Category</label>
@@ -123,7 +116,6 @@
                 </div>
             </div>
 
-            <!-- Search Bar with Voice Input -->
             <div class="mb-6 relative">
                 <input type="text" id="searchInput" placeholder="Search words..."
                     class="w-full px-4 py-2 bg-gray-800 border border-gray-700 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent pl-10">
@@ -133,8 +125,8 @@
                 </button>
             </div>
 
-            <!-- Words Table -->
-            <div  id="tablemain" class="bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg mb-6 animate__animated animate__fadeIn">
+            <div id="tablemain"
+                class="bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg mb-6 animate__animated animate__fadeIn">
                 <div id="tablemain" class="p-6">
                     <div id="tablemain" class="overflow-x-auto">
                         <table id="tablemain" class="min-w-full divide-y divide-gray-700">
@@ -143,8 +135,8 @@
                                     <th
                                         class="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">
                                         done</th>
- 
-                                         
+
+
                                     <th
                                         class="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">
                                         Word</th>
@@ -169,7 +161,6 @@
                 </div>
             </div>
 
-            <!-- Progress Tracker -->
             <div class="bg-gray-800 rounded-lg p-6 mb-6 animate__animated animate__fadeIn">
                 <h3 class="text-lg font-medium mb-4">Your Progress</h3>
                 <div class="grid grid-cols-3 gap-4">
@@ -186,12 +177,107 @@
                         <div class="text-sm text-gray-400">Mastered Words</div>
                     </div>
                 </div>
+                <!-- gameL -->
+                <!-- Add this section where you want the games to appear -->
+                <div class="games-section p-6">
+                    <!-- Games Navigation -->
+                    <div class="flex space-x-4 mb-6">
+                        <button onclick="showGame('wordMatch')"
+                            class="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600">
+                            Word Match
+                        </button>
+                        <button onclick="showGame('speedChallenge')"
+                            class="px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600">
+                            Speed Challenge
+                        </button>
+                        <button onclick="showGame('memoryGame')"
+                            class="px-4 py-2 bg-purple-500 text-white rounded-lg hover:bg-purple-600">
+                            Memory Cards
+                        </button>
+                        <button onclick="showGame('dailyChallenge')"
+                            class="px-4 py-2 bg-yellow-500 text-white rounded-lg hover:bg-yellow-600">
+                            Daily Challenge
+                        </button>
+                    </div>
+
+                    <!-- Game Containers -->
+                    <div id="gameContainers">
+                        <!-- Word Match Game -->
+                        <div id="wordMatch" class="game-container hidden">
+                            <h3 class="text-xl font-bold mb-4">Match Words with Translations</h3>
+                            <div id="wordMatchContainer" class="grid grid-cols-2 gap-4" style="color: black;">
+                                <!-- Words will be populated here -->
+                            </div>
+                            <div class="mt-4" >
+                                <p>Score: <span id="wordMatchScore">0</span></p>
+                                <p>Time: <span id="wordMatchTimer">60</span>s</p>
+                            </div>
+                        </div>
+
+                        <!-- Speed Challenge -->
+                        <div id="speedChallenge" class="game-container hidden">
+                            <h3 class="text-xl font-bold mb-4">Speed Translation Challenge</h3>
+                            <div class="text-center">
+                                <div id="challengeWord" class="text-3xl mb-4">Ready?</div>
+                                <input type="text" id="challengeInput"  class="w-64 p-2 border rounded"
+                                    placeholder="Type translation here">
+                                <div class="mt-4">
+                                    <p>Score: <span id="speedScore">0</span></p>
+                                    <p>Time: <span id="speedTimer">30</span>s</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Memory Game -->
+                        <div id="memoryGame" class="game-container hidden">
+                            <h3 class="text-xl font-bold mb-4">Memory Cards</h3>
+                            <div id="memoryContainer" class="grid grid-cols-4 gap-4" style="color: black;">
+                                <!-- Cards will be populated here -->
+                            </div>
+                            <div class="mt-4">
+                                <p>Matches Found: <span id="memoryScore">0</span></p>
+                                <p>Moves: <span id="memoryMoves">0</span></p>
+                            </div>
+                        </div>
+
+                        <!-- Daily Challenge -->
+                        <div id="dailyChallenge" class="game-container hidden">
+                            <h3 class="text-xl font-bold mb-4">Daily Challenge</h3>
+                            <div class="bg-white p-6 rounded-lg shadow" style="color: black;">
+                                <h4 class="text-lg font-semibold mb-2">Today's Challenges:</h4>
+                                <div id="dailyChallengeList" class="space-y-4" style="color: black;">
+                                    <!-- Challenges will be populated here -->
+                                </div>
+                                <div class="mt-4" style="color: black;">
+                                    <p>Progress: <span id="challengeProgress">0</span>/5</p>
+                                    <div class="w-full bg-gray-200 rounded-full h-2.5 mt-2">
+                                        <div id="challengeProgressBar" class="bg-yellow-500 h-2.5 rounded-full"
+                                            style="width: 0%"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Results Modal -->
+                    <div id="gameResultsModal" class="fixed inset-0 bg-black bg-opacity-50 hidden">
+                        <div
+                            class="bg-white p-6 rounded-lg w-96 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+                            <h3 class="text-xl font-bold mb-4">Game Results</h3>
+                            <div id="gameResultsContent"></div>
+                            <button onclick="closeGameResults()"
+                                class="mt-4 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">
+                                Close
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <!-- gameL -->
+
             </div>
         </div>
     </div>
 
-    <!-- Floating Action Button -->
-    <!-- Floating Action Button -->
     <button onclick="newWord()"
         class="floating-action-button bg-indigo-500 hover:bg-indigo-500 text-white rounded-full p-0 shadow-lg"
         id="btnAddNewData">
@@ -208,7 +294,6 @@
         <i class="fas fa-plus text-xl"></i>
     </button>
 
-    <!-- Add Word Modal -->
     <div id="addWordModal"
         class="hidden fixed inset-0 bg-gray-900 bg-opacity-50 overflow-y-auto h-full w-full animate__animated animate__fadeIn">
         <div
@@ -276,7 +361,6 @@
         </div>
     </div>
 
-    <!-- Flashcard Modal -->
     <div id="flashcardModal" class="hidden fixed inset-0 bg-gray-900 bg-opacity-50 overflow-y-auto h-full w-full">
         <div class="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-gray-800">
             <div class="mt-3">
@@ -307,7 +391,6 @@
         </div>
     </div>
 
-    <!-- Daily Challenge Modal -->
     <div id="dailyChallengeModal" class="hidden fixed inset-0 bg-gray-900 bg-opacity-50 overflow-y-auto h-full w-full">
         <div class="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-gray-800">
             <div class="mt-3">
@@ -331,7 +414,6 @@
         </div>
     </div>
 
-    <!-- Notification -->
     <div id="notification"
         class="hidden fixed bottom-4 right-4 bg-green-500 text-white px-6 py-3 rounded-lg shadow-lg animate__animated animate__fadeInUp">
     </div>
