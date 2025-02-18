@@ -582,6 +582,14 @@ function submitForm(event) {
     // Example: Submit via AJAX (use your preferred method)
 
 }
+document.addEventListener("keydown", function (event) {
+    if (event.key === "Tab") {
+        showAddModal();
+    }
+    if (event.key === "Enter") {
+        showAddModal();
+    }
+});
 // //-YAAe8TKg
 // + + +
 // + + +
@@ -985,4 +993,6 @@ function generateChartData() {
 
     return { progressData, categoryData };
 }
+// key for tabe
+
 
