@@ -205,7 +205,6 @@ function renderWordsTable() {
                 <td class="px-6 py-4 whitespace-nowrap">
                      <button onclick="toggleDone(${actualIndex})" class="text-green-400 hover:text-green-500 ml-2">
                                 <i class="fas ${word.isDone ? 'fa-square-check' : 'fa-stop'}" style="color:${word.isDone ? '#63E6BE' : '#B197FC'}"></i>
-     
                             </button>
                             </td>
                 <td class="px-6 py-4 whitespace-nowrap">  
@@ -910,205 +909,494 @@ function generateChartData() {
 
 
 
-//game 
-// Function to show the selected game and hide others
-function showGame(gameId) {
-    // Hide all game containers
-    const games = document.querySelectorAll('.game-container');
-    games.forEach(game => game.classList.add('hidden'));
+//gameL 
+(() => {
+    // -----------------------------
+    // Data & Utility Functions
+    // -----------------------------
+   const vocabularyWords =
+      JSON.parse(localStorage.getItem("vocabularyWords")) ||
+      [
+        { word: "Apple", translation: "Pomme", example: "I ate an apple." },
+        { word: "Cat", translation: "Chat", example: "The cat is sleeping." },
+        { word: "Dog", translation: "Chien", example: "The dog barked loudly." },
+        { word: "Book", translation: "Livre", example: "She is reading a book." },
+        { word: "House", translation: "Maison", example: "They live in a big house." },
+        { word: "Car", translation: "Voiture", example: "He drives a red car." },
+        { word: "Tree", translation: "Arbre", example: "The tree is tall." },
+        { word: "Water", translation: "Eau", example: "She drinks water every morning." },
+        { word: "Chair", translation: "Chaise", example: "This chair is very comfortable." },
+        { word: "Table", translation: "Table", example: "The table is made of wood." },
+        { word: "Window", translation: "Fenêtre", example: "I opened the window to let in fresh air." },
+        { word: "Sun", translation: "Soleil", example: "The sun is shining brightly." }
+      ];
 
-    // Show the selected game
-    document.getElementById(gameId).classList.remove('hidden');
-
-    // Reset inputs and scores
-    if (gameId === 'speedChallenge') {
-        startSpeedChallenge();
-    } else if (gameId === 'wordMatch') {
-        startWordMatch();
-    } else if (gameId === 'memoryGame') {
-        startMemoryGame();
-    }
-}
-
-// Word Match Game Logic
-function startWordMatch() {
-    const wordPairs = [
-        { word: 'Apple', translation: 'Pomme' },
-        { word: 'Cat', translation: 'Chat' },
-        { word: 'Dog', translation: 'Chien' }
-    ];
-
-    const container = document.getElementById('wordMatchContainer');
-    container.innerHTML = '';
-
-    let score = 0;
-    let timeLeft = 60;
-    document.getElementById('wordMatchScore').innerText = score;
-    document.getElementById('wordMatchTimer').innerText = timeLeft;
-
-    // Shuffle and display words and translations
-    const words = [...wordPairs.map(pair => pair.word)];
-    const translations = [...wordPairs.map(pair => pair.translation)];
-    const shuffledWords = words.sort(() => Math.random() - 0.5);
-    const shuffledTranslations = translations.sort(() => Math.random() - 0.5);
-
-    shuffledWords.forEach(word => {
-        const wordDiv = document.createElement('div');
-        wordDiv.className = 'bg-blue-100 p-2 rounded text-center cursor-pointer';
-        wordDiv.innerText = word;
-        wordDiv.onclick = () => checkMatch(word, wordDiv);
-        container.appendChild(wordDiv);
-    });
-
-    shuffledTranslations.forEach(trans => {
-        const transDiv = document.createElement('div');
-        transDiv.className = 'bg-green-100 p-2 rounded text-center cursor-pointer';
-        transDiv.innerText = trans;
-        transDiv.onclick = () => checkMatch(trans, transDiv);
-        container.appendChild(transDiv);
-    });
-
-    let firstSelection = null;
-    function checkMatch(value, element) {
-        if (!firstSelection) {
-            firstSelection = { value, element };
-            element.classList.add('bg-yellow-300');
-        } else {
-            if (
-                wordPairs.find(
-                    pair =>
-                        (pair.word === firstSelection.value && pair.translation === value) ||
-                        (pair.word === value && pair.translation === firstSelection.value)
-                )
-            ) {
-                score++;
-                document.getElementById('wordMatchScore').innerText = score;
-                firstSelection.element.classList.add('bg-green-300');
-                element.classList.add('bg-green-300');
-                firstSelection.element.onclick = null;
-                element.onclick = null;
+  
+    const challengesData =
+      JSON.parse(localStorage.getItem("challenges")) ||
+      [
+        { task: "Translate 5 words", completed: false },
+        { task: "Complete Memory Game", completed: false },
+        { task: "Win Speed Challenge", completed: false }
+      ];
+  
+    // Update localStorage (if changes occur)
+    const updateLocalStorage = () => {
+      localStorage.setItem("vocabularyWords", JSON.stringify(vocabularyWords));
+      localStorage.setItem("challenges", JSON.stringify(challengesData));
+    };
+  
+    // Show modal for feedback (uses your existing #gameResultsModal)
+    const showModal = (message) => {
+      const modal = document.getElementById("gameResultsModal");
+      const content = document.getElementById("gameResultsContent");
+      content.innerHTML = `<p style="color:black; text-shadow: 0;">${message}</p>`;
+      modal.classList.remove("hidden");
+      setTimeout(() => {
+        modal.classList.add("hidden");
+      }, 900);
+    };
+  
+    // -----------------------------
+    // Game Display & Routing
+    // -----------------------------
+    const showGame = (gameId) => {
+      // Hide all game containers
+      document.querySelectorAll(".game-container").forEach((container) => {
+        container.classList.add("hidden");
+      });
+      // Clear any previous content by resetting innerHTML (to reinitialize each game)
+      const gameContainer = document.getElementById(gameId);
+      gameContainer.classList.remove("hidden");
+      gameContainer.innerHTML = "";
+  
+      // Call the corresponding game function
+      switch (gameId) {
+        case "wordMatch":
+          startWordMatch(gameContainer);
+          break;
+        case "speedChallenge":
+          startSpeedChallenge(gameContainer);
+          break;
+        case "memoryGame":
+          startMemoryGame(gameContainer);
+          break;
+        case "dailyChallenge":
+          startDailyChallenge(gameContainer);
+          break;
+        case "wordQuizChallenge":
+          startWordQuizChallenge(gameContainer);
+          break;
+        case "askTranslateChallenge":
+          startAskTranslateChallenge(gameContainer);
+          break;
+        case "efmQuestions":
+          startEFMQuestions(gameContainer);
+          break;
+        default:
+          gameContainer.innerHTML = "<p style='color:black; text-shadow: 0;' >Select a game!</p>";
+      }
+    };
+  
+    // Attach showGame to the global scope for any inline onclick calls.
+    window.showGame = showGame;
+  
+    // -----------------------------
+    // 1. Word Match Game
+    // -----------------------------
+    const startWordMatch = (container) => {
+      container.innerHTML = `
+        <h3 class="text-xl font-bold mb-4 text-white">Match Words with Translations</h3>
+        <div class="grid grid-cols-2 gap-4 mb-4" id="wmGrid" style="color:black; text-shadow: 0;"></div>
+        <div class="mt-4 text-white">Score: <span id="wmScore">0</span> | Time: <span id="wmTimer">60</span>s</div>
+      `;
+      let score = 0;
+      let timeLeft = 60;
+      let firstSelection = null;
+      const grid = document.getElementById("wmGrid");
+      const scoreDisplay = document.getElementById("wmScore");
+      const timerDisplay = document.getElementById("wmTimer");
+  
+      // Create arrays of words and translations then shuffle
+      const words = vocabularyWords.map((item) => item.word);
+      const translations = vocabularyWords.map((item) => item.translation);
+      const shuffledWords = [...words].sort(() => Math.random() - 0.5);
+      const shuffledTranslations = [...translations].sort(() => Math.random() - 0.5);
+  
+      // Create a card element with improved hover/animation effects
+      const createCard = (text, type) => {
+        const card = document.createElement("div");
+        card.className =
+          "bg-blue-100 p-2 rounded text-center cursor-pointer transition transform hover:scale-105";
+        card.innerText = text;
+        card.addEventListener("click", () => {
+          // If no card selected, mark as first selection
+          if (!firstSelection) {
+            firstSelection = { text, card, type };
+            card.classList.add("bg-yellow-300");
+          } else {
+            // Prevent clicking the same card twice
+            if (firstSelection.card === card) return;
+            // Check if the selected pair is a valid match
+            const isMatch = vocabularyWords.some((item) => {
+              return (
+                (item.word === firstSelection.text && item.translation === text) ||
+                (item.translation === firstSelection.text && item.word === text)
+              );
+            });
+            if (isMatch && firstSelection.type !== type) {
+              score++;
+              scoreDisplay.innerText = score;
+              firstSelection.card.classList.replace("bg-yellow-300", "bg-green-300");
+              card.classList.replace("bg-blue-100", "bg-green-300");
+              // Disable further clicks on matched cards
+              firstSelection.card.style.pointerEvents = "none";
+              card.style.pointerEvents = "none";
+              showModal("🎉 Correct Match!");
             } else {
-                firstSelection.element.classList.remove('bg-yellow-300');
-                element.classList.add('bg-red-300');
-                setTimeout(() => {
-                    element.classList.remove('bg-red-300');
-                }, 500);
+              card.classList.add("bg-red-300");
+              showModal("❌ Incorrect Match!");
+              setTimeout(() => {
+                card.classList.replace("bg-red-300", "bg-blue-100");
+                firstSelection.card.classList.replace("bg-yellow-300", "bg-blue-100");
+              }, 500);
             }
             firstSelection = null;
-        }
-    }
-
-    const timer = setInterval(() => {
+          }
+        });
+        return card;
+      };
+  
+      // Append shuffled word and translation cards
+      shuffledWords.forEach((word) => grid.appendChild(createCard(word, "word")));
+      shuffledTranslations.forEach((trans) =>
+        grid.appendChild(createCard(trans, "translation"))
+      );
+  
+      // Timer countdown
+      const timerInterval = setInterval(() => {
         timeLeft--;
-        document.getElementById('wordMatchTimer').innerText = timeLeft;
+        timerDisplay.innerText = timeLeft;
         if (timeLeft <= 0) {
-            clearInterval(timer);
-            alert('Time is up! Your score: ' + score);
+          clearInterval(timerInterval);
+          showModal(`Time's up! Final Score: ${score}`);
         }
-    }, 1000);
-}
-
-// Speed Challenge Game Logic
-function startSpeedChallenge() {
-    const words = [
-        { word: 'House', translation: 'Maison' },
-        { word: 'Book', translation: 'Livre' },
-        { word: 'Car', translation: 'Voiture' }
-    ];
-
-    let score = 0;
-    let timeLeft = 30;
-    document.getElementById('speedScore').innerText = score;
-    document.getElementById('speedTimer').innerText = timeLeft;
-
-    const input = document.getElementById('challengeInput');
-    const challengeWord = document.getElementById('challengeWord');
-
-    function newWord() {
-        const randomWord = words[Math.floor(Math.random() * words.length)];
-        challengeWord.innerText = randomWord.word;
-        input.value = '';
-        input.focus();
-
-        input.onkeyup = () => {
-            if (input.value.toLowerCase() === randomWord.translation.toLowerCase()) {
-                score++;
-                document.getElementById('speedScore').innerText = score;
-                newWord();
-            }
+      }, 1000);
+    };
+  
+    // -----------------------------
+    // 2. Speed Challenge
+    // -----------------------------
+    const startSpeedChallenge = (container) => {
+      container.innerHTML = `
+        <h3 class="text-xl font-bold mb-4 text-white">Speed Translation Challenge</h3>
+        <div class="text-center mb-4">
+          <div id="scWord" class="text-3xl text-white mb-4">Ready?</div>
+          <input type="text" id="scInput" class="w-64 p-2 rounded border" style="color:black; text-shadow: 0;" placeholder="Type translation here">
+        </div>
+        <div class="text-white">Score: <span id="scScore">0</span> | Time: <span id="scTimer">30</span>s</div>
+      `;
+      let score = 0;
+      let timeLeft = 30;
+      const wordDisplay = document.getElementById("scWord");
+      const inputField = document.getElementById("scInput");
+      const scoreDisplay = document.getElementById("scScore");
+      const timerDisplay = document.getElementById("scTimer");
+  
+      const newWord = () => {
+        const randomItem =
+          vocabularyWords[Math.floor(Math.random() * vocabularyWords.length)];
+        wordDisplay.innerText = randomItem.word;
+        inputField.value = "";
+        inputField.focus();
+        inputField.onkeyup = () => {
+          if (
+            inputField.value.trim().toLowerCase() ===
+            randomItem.translation.toLowerCase()
+          ) {
+            score++;
+            scoreDisplay.innerText = score;
+            showModal("🎉 Correct!");
+            newWord();
+          }
         };
-    }
-
-    newWord();
-
-    const timer = setInterval(() => {
+      };
+      newWord();
+  
+      const timerInterval = setInterval(() => {
         timeLeft--;
-        document.getElementById('speedTimer').innerText = timeLeft;
+        timerDisplay.innerText = timeLeft;
         if (timeLeft <= 0) {
-            clearInterval(timer);
-            alert('Time is up! Your score: ' + score);
+          clearInterval(timerInterval);
+          showModal(`Time's up! Final Score: ${score}`);
         }
-    }, 1000);
-}
-
-// Memory Game Logic
-function startMemoryGame() {
-    const cards = [
-        '🐱', '🐱', '🐶', '🐶', '🐰', '🐰', '🦊', '🦊'
-    ];
-
-    let score = 0;
-    let moves = 0;
-    let firstCard = null;
-    const memoryContainer = document.getElementById('memoryContainer');
-    memoryContainer.innerHTML = '';
-
-    // Shuffle and display cards
-    const shuffledCards = cards.sort(() => Math.random() - 0.5);
-    shuffledCards.forEach(symbol => {
-        const card = document.createElement('div');
-        card.className = 'bg-gray-200 p-4 rounded text-center text-3xl cursor-pointer';
-        card.innerText = '?';
-        card.dataset.symbol = symbol;
-        card.onclick = () => flipCard(card);
-        memoryContainer.appendChild(card);
-    });
-
-    function flipCard(card) {
-        if (card.innerText !== '?') return;
-        card.innerText = card.dataset.symbol;
-        card.classList.add('bg-white');
-
-        if (!firstCard) {
-            firstCard = card;
-        } else {
-            moves++;
-            document.getElementById('memoryMoves').innerText = moves;
-            if (firstCard.dataset.symbol === card.dataset.symbol) {
-                score++;
-                document.getElementById('memoryScore').innerText = score;
-                firstCard.onclick = null;
-                card.onclick = null;
-            } else {
+      }, 1000);
+    };
+  
+    // -----------------------------
+    // 3. Memory Game
+    // -----------------------------
+    const startMemoryGame = (container) => {
+      container.innerHTML = `
+        <h3 class="text-xl font-bold mb-4 text-white">Memory Cards</h3>
+        <div class="grid grid-cols-4 gap-4 mb-4" id="mgGrid" style="color:black; text-shadow: 0;"></div>
+        <div class="text-white">Matches: <span id="mgMatches">0</span> | Moves: <span id="mgMoves">0</span></div>
+      `;
+      let matches = 0,
+        moves = 0;
+      const grid = document.getElementById("mgGrid");
+      const matchesDisplay = document.getElementById("mgMatches");
+      const movesDisplay = document.getElementById("mgMoves");
+  
+      // Create an array of cards containing both word and translation values
+      const cards = vocabularyWords.flatMap((item) => [item.word, item.translation]);
+      const shuffledCards = [...cards].sort(() => Math.random() - 0.5);
+      let flippedCards = [];
+  
+      shuffledCards.forEach((text) => {
+        const card = document.createElement("div");
+        card.className =
+          "bg-white p-4 rounded text-center text-3xl cursor-pointer shadow transition transform hover:scale-105";
+        card.innerText = text;
+        card.style.visibility = "hidden";
+        card.addEventListener("click", () => {
+          if (flippedCards.length < 2 && card.style.visibility === "hidden") {
+            card.style.visibility = "visible";
+            flippedCards.push(card);
+            if (flippedCards.length === 2) {
+              moves++;
+              movesDisplay.innerText = moves;
+              const [first, second] = flippedCards;
+              const isMatch = vocabularyWords.some((item) => {
+                return (
+                  (item.word === first.innerText && item.translation === second.innerText) ||
+                  (item.translation === first.innerText && item.word === second.innerText)
+                );
+              });
+              if (isMatch) {
+                matches++;
+                matchesDisplay.innerText = matches;
+                first.style.backgroundColor = "lightgreen";
+                second.style.backgroundColor = "lightgreen";
+                first.style.pointerEvents = "none";
+                second.style.pointerEvents = "none";
+                showModal("🎉 Match Found!");
+                flippedCards = [];
+              } else {
                 setTimeout(() => {
-                    firstCard.innerText = '?';
-                    firstCard.classList.remove('bg-white');
-                    card.innerText = '?';
-                    card.classList.remove('bg-white');
+                  first.style.visibility = "hidden";
+                  second.style.visibility = "hidden";
+                  showModal("❌ Not a match!");
+                  flippedCards = [];
                 }, 800);
+              }
             }
-            firstCard = null;
+          }
+        });
+        grid.appendChild(card);
+      });
+    };
+  
+    // -----------------------------
+    // 4. Daily Challenge
+    // -----------------------------
+    const startDailyChallenge = (container) => {
+      container.innerHTML = `
+        <h3 class="text-xl font-bold mb-4 text-white">Daily Challenge</h3>
+        <div id="dcList" class="space-y-4 mb-4" style="color:black; text-shadow: 0;"></div>
+        <div class="text-black">Progress: <span id="dcProgress">0</span>/${challengesData.length}</div>
+        <div class="w-full bg-gray-200 rounded-full h-2.5 mt-2">    
+          <div id="dcProgressBar" class="bg-yellow-500 h-2.5 rounded-full" style="width:0%"></div>
+        </div>
+      `;
+      const listContainer = document.getElementById("dcList");
+      challengesData.forEach((challenge, index) => {
+        const item = document.createElement("div");
+        item.className = "flex justify-between items-center bg-white p-3 rounded";
+        item.innerHTML = `
+          <span>${challenge.task}</span>
+          <input type="checkbox" ${challenge.completed ? "checked" : ""} data-index="${index}" class="dc-checkbox">
+        `;
+        listContainer.appendChild(item);
+      });
+  
+      const completed = challengesData.filter((ch) => ch.completed).length;
+      document.getElementById("dcProgress").innerText = completed;
+      document.getElementById("dcProgressBar").style.width = `${(completed / challengesData.length) * 100}%`;
+  
+      // Attach checkbox event listeners to update challenge completion
+      document.querySelectorAll(".dc-checkbox").forEach((checkbox) => {
+        checkbox.addEventListener("change", (e) => {
+          const idx = parseInt(e.target.dataset.index);
+          challengesData[idx].completed = e.target.checked;
+          updateLocalStorage();
+          startDailyChallenge(container);
+        });
+      });
+    };
+  
+    // -----------------------------
+    // 5. Word Quiz Challenge
+    // -----------------------------
+    const startWordQuizChallenge = (container) => {
+      container.innerHTML = `
+        <h3 class="text-xl font-bold mb-4 text-white">Word Quiz Challenge</h3>
+        <div id="wqContent" class="text-white"></div>
+        <button id="wqNext" class="mt-4 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition">Next Question</button>
+      `;
+      const contentDiv = document.getElementById("wqContent");
+  
+      const loadQuestion = () => {
+        if (vocabularyWords.length === 0) {
+          contentDiv.innerHTML = `<p>No vocabulary words available!</p>`;
+          return;
         }
-    }
-}
-
-// Daily Challenge Logic (Placeholder)
-function startDailyChallenge() {
-    document.getElementById('dailyChallengeList').innerHTML = `
-        <ul>
-            <li>Complete 5 translations</li>
-            <li>Score 10 points in Speed Challenge</li>
-            <li>Find 4 pairs in Memory Game</li>
-        </ul>
-    `;
-}
+        const randomItem =
+          vocabularyWords[Math.floor(Math.random() * vocabularyWords.length)];
+        const correct = randomItem.translation;
+        let options = [correct];
+        const otherOptions = vocabularyWords
+          .filter((item) => item.translation !== correct)
+          .map((item) => item.translation);
+        otherOptions.sort(() => Math.random() - 0.5);
+        options = options.concat(otherOptions.slice(0, Math.min(3, otherOptions.length)));
+        options.sort(() => Math.random() - 0.5);
+  
+        contentDiv.innerHTML = `
+          <p class="mb-4">What is the translation for: <strong>${randomItem.word}</strong>?</p>
+          <div id="wqOptions" class="space-y-2"></div>
+          <div id="wqFeedback" class="mt-4"></div>
+        `;
+        const optionsDiv = document.getElementById("wqOptions");
+        options.forEach((option) => {
+          const btn = document.createElement("button");
+          btn.className = "w-full px-4 py-2 border rounded hover:bg-gray-200 transition";
+          btn.innerText = option;
+          btn.addEventListener("click", () => {
+            checkWordQuizAnswer(option, correct);
+          });
+          optionsDiv.appendChild(btn);
+        });
+      };
+  
+      const checkWordQuizAnswer = (selected, correct) => {
+        const feedback = document.getElementById("wqFeedback");
+        if (selected === correct) {
+          feedback.innerHTML = `<p class="text-green-500 font-bold">🎉 Correct!</p>`;
+        } else {
+          feedback.innerHTML = `<p class="text-red-500 font-bold">❌ Incorrect! The correct answer is ${correct}.</p>`;
+        }
+      };
+  
+      loadQuestion();
+      document.getElementById("wqNext").addEventListener("click", loadQuestion);
+    };
+  
+    // -----------------------------
+    // 6. Ask Translate Challenge
+    // -----------------------------
+    const startAskTranslateChallenge = (container) => {
+      container.innerHTML = `
+        <h3 class="text-xl font-bold mb-4 text-white">Ask Translate Challenge</h3>
+        <div id="atContent" class="text-white"></div>
+      `;
+      const contentDiv = document.getElementById("atContent");
+  
+      const loadChallenge = () => {
+        if (vocabularyWords.length === 0) {
+          contentDiv.innerHTML = `<p>No vocabulary words available!</p>`;
+          return;
+        }
+        const randomItem =
+          vocabularyWords[Math.floor(Math.random() * vocabularyWords.length)];
+        const direction = Math.random() < 0.5;
+        const prompt = direction ? randomItem.word : randomItem.translation;
+        const correct = direction ? randomItem.translation : randomItem.word;
+  
+        contentDiv.innerHTML = `
+          <p class="mb-4">Translate the following: <strong>${prompt}</strong></p>
+          <input type="text" id="atInput" class="w-full px-4 py-2 border rounded" style="color:black; text-shadow: 0;" placeholder="Type your translation here">
+          <div id="atFeedback" class="mt-4"></div>
+        `;
+        const inputField = document.getElementById("atInput");
+        inputField.focus();
+        inputField.addEventListener("keyup", (e) => {
+          if (e.key === "Enter") {
+            const userAnswer = inputField.value.trim();
+            const feedback = document.getElementById("atFeedback");
+            if (userAnswer.toLowerCase() === correct.toLowerCase()) {
+              feedback.innerHTML = `<p class="text-green-500 font-bold">🎉 Correct!</p>`;
+              setTimeout(loadChallenge, 1500);
+            } else {
+              feedback.innerHTML = `<p class="text-red-500 font-bold">❌ Incorrect! Try again.</p>`;
+            }
+          }
+        });
+      };
+      loadChallenge();
+    };
+  
+    // -----------------------------
+    // 7. EFM Questions Challenge
+    // -----------------------------
+    const startEFMQuestions = (container) => {
+      container.innerHTML = `
+        <h3 class="text-xl font-bold mb-4 text-white">EFM Questions Challenge</h3>
+        <div id="efmContent" class="text-white"></div>
+        <button id="efmNext" class="mt-4 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition">Next Question</button>
+      `;
+      const contentDiv = document.getElementById("efmContent");
+  
+      const loadQuestion = () => {
+        if (vocabularyWords.length === 0) {
+          contentDiv.innerHTML = `<p>No vocabulary words available!</p>`;
+          return;
+        }
+        const randomItem =
+          vocabularyWords[Math.floor(Math.random() * vocabularyWords.length)];
+        const correctExample = randomItem.example || "No example available";
+        let options = [correctExample];
+        const otherExamples = vocabularyWords
+          .filter((item) => item.example && item.example !== correctExample)
+          .map((item) => item.example);
+        otherExamples.jfijesort(() => Math.random() - 0.5);
+        options = options.concat(otherExamples.slice(0, Math.min(3, otherExamples.length)));
+        options.sort(() => Math.random() - 0.5);
+  
+        contentDiv.innerHTML = `
+          <p class="mb-4">Select the correct example sentence for: <strong>${randomItem.word}</strong></p>
+          <div id="efmOptions" class="space-y-2"></div>
+          <div id="efmFeedback" class="mt-4"></div>
+        `;
+        const optionsDiv = document.getElementById("efmOptions");
+        options.forEach((option) => {
+          const btn = document.createElement("button");
+          btn.className = "w-full px-4 py-2 border rounded hover:bg-gray-200 transition";
+          btn.innerText = option;
+          btn.addEventListener("click", () => {
+            checkEFMAnswer(option, correctExample);
+          });
+          optionsDiv.appendChild(btn);
+        });
+      };
+  
+      const checkEFMAnswer = (selected, correct) => {
+        const feedback = document.getElementById("efmFeedback");
+        if (selected === correct) {
+          feedback.innerHTML = `<p class="text-green-500 font-bold">🎉 Correct!</p>`;
+        } else {
+          feedback.innerHTML = `<p class="text-red-500 font-bold">❌ Incorrect! The correct answer is: ${correct}</p>`;
+        }
+      };
+  
+      loadQuestion();
+      document.getElementById("efmNext").addEventListener("click", loadQuestion);
+    };
+ 
+    window.addEventListener("DOMContentLoaded", () => {
+      updateLocalStorage(); 
+      // Also initialize the Daily Challenge container, if desired.
+      startDailyChallenge(document.getElementById("dailyChallenge"));
+    });
+  })();
+       
