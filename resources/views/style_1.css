@@ -371,3 +371,7 @@ tbody tr:nth-child(even) {
     text-align: left;
   }
 }
+
+#wordtable{
+  min-width: 195px;
+}
