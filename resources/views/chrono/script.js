@@ -148,6 +148,8 @@ function formatTime(ms) {
     const minutes = String(date.getUTCMinutes()).padStart(2, '0');
     const seconds = String(date.getUTCSeconds()).padStart(2, '0');
     const milliseconds = String(date.getUTCMilliseconds()).padStart(3, '0');
+    
+    document.title = `${hours}:${minutes}:${seconds}.${milliseconds}`;
     return `${hours}:${minutes}:${seconds}.${milliseconds}`;
 }
 updateSessionsList();
